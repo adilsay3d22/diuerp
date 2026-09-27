@@ -1,26 +1,269 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* DIU ERP design system. Brand from the university crest: DIU blue #09509E and DIU green #39B24A.
+   Cool slate neutrals so the blue sits naturally; blue is the single interactive accent, green marks success and "live".
+   Components use tokens only, never raw hex. */
+@theme {
+  /* Brand */
+  --color-brand: #09509e;
+  --color-brand-hover: #07407f;
+  --color-brand-soft: #eaf2fb;
+  --color-brand-green: #39b24a;
+  --color-brand-deep: #061a36; /* sidebar, dark tiles */
+  --color-brand-deeper: #04122a;
+
+  /* Legacy names mapped onto the brand so older markup stays on-palette */
+  --color-navy-900: #04122a;
+  --color-navy-800: #061a36;
+  --color-navy-700: #0c2a52;
+  --color-navy-600: #1b3a66;
+  --color-indigo: #09509e;
+  --color-royal: #09509e;
+  --color-primary: #09509e;
+  --color-primary-hover: #07407f;
+  --color-logo-blue: #09509e;
+  --color-logo-green: #39b24a;
+  --color-accent: #09509e;
+  --color-periwinkle: #09509e;
+  --color-icon: #09509e;
+
+  /* Surfaces */
+  --color-page: #f4f6f9;
+  --color-card: #ffffff;
+  --color-muted: #f1f4f8;
+  --color-segment: #e8edf3;
+  --color-track: #e3e8ef;
+  --color-rule: #e6eaf0;
+  --color-field: #cdd5df;
+  --color-select: #eaf2fb;
+  --color-tint-blue: #eaf2fb;
+  --color-tint-green: #ebf7ed;
+  --color-tint-purple: #f1f4f8;
+  --color-tint-red: #fdf0f0;
+  --color-tint-amber: #fff8e6;
+
+  /* Text */
+  --color-ink: #0f1b2d;
+  --color-heading: #0a1628;
+  --color-strong: #334155;
+  --color-meta: #5b6b80;
+  --color-on-dark: #f8fafc;
+  --color-on-dark-muted: #9fb0c8;
+
+  /* Status (text-safe on white) */
+  --color-success: #1d7a31;
+  --color-success-bright: #39b24a;
+  --color-danger: #c0262d;
+  --color-danger-soft: #f87171;
+  --color-warning: #d97706;
+  --color-warning-ink: #8a4b06;
+  --color-warning-soft: #fbbf24;
+  --color-info: #09509e;
+
+  --font-sans: var(--font-geist), var(--font-bengali), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), var(--font-bengali), ui-monospace, monospace;
+
+  /* Diffusion shadows tinted to the navy, with a hairline ring instead of a border */
+  --shadow-panel: 0 0 0 1px rgb(10 22 40 / 0.06), 0 1px 2px rgb(10 22 40 / 0.04), 0 16px 32px -20px rgb(10 22 40 / 0.12);
+  --shadow-lift: 0 0 0 1px rgb(10 22 40 / 0.07), 0 2px 4px rgb(10 22 40 / 0.05), 0 28px 56px -24px rgb(10 22 40 / 0.22);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgb(9 80 158 / 0.12);
+}
+a,
+button,
+input,
+select,
+textarea,
+label,
+summary {
+  touch-action: manipulation;
+}
+[id] {
+  scroll-margin-top: 5.5rem; /* clears the sticky header when jumping to #anchors */
+}
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  letter-spacing: -0.011em;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+::selection {
+  background: color-mix(in srgb, var(--color-brand) 20%, transparent);
+}
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+a {
+  text-underline-offset: 3px;
+}
+input,
+select,
+textarea {
+  caret-color: var(--color-brand);
+  accent-color: var(--color-brand);
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+td,
+th,
+.num {
+  font-variant-numeric: tabular-nums;
+}
+.num {
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Data tables: mono uppercase header, hairline dividers, row hover */
+.register {
+  width: 100%;
+  border-collapse: collapse;
+}
+.register th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-meta);
+  padding: 0.625rem 1rem;
+  background: var(--color-muted);
+  border-block: 1px solid var(--color-rule);
+  white-space: nowrap;
+}
+.register th:first-child,
+.register td:first-child {
+  padding-left: 1.5rem;
+}
+.register th:last-child,
+.register td:last-child {
+  padding-right: 1.5rem;
+}
+.register td {
+  padding: 0.8125rem 1rem;
+  border-bottom: 1px solid var(--color-rule);
+  vertical-align: middle;
+}
+.register tbody tr:last-child td {
+  border-bottom: 0;
+}
+.register tbody tr {
+  transition: background-color 150ms;
+}
+.register tbody tr:hover td {
+  background: color-mix(in srgb, var(--color-muted) 70%, white);
+}
+.register tr.selected td {
+  background: var(--color-select);
+}
+.register td.serial {
+  color: var(--color-meta);
+  width: 1%;
+  white-space: nowrap;
+}
+.register .r {
+  text-align: right;
+}
+.register tfoot td {
+  border-top: 1px solid var(--color-field);
+  border-bottom: 0;
+  font-weight: 600;
+}
+
+* {
+  scrollbar-color: var(--color-field) transparent;
+  scrollbar-width: thin;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+  .stagger > * {
+    animation: none !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Motion: transform and opacity only, exponential ease-out */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.pop-in {
+  animation: pop-in 320ms var(--ease-out-expo) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.stagger > * {
+  animation: rise 560ms var(--ease-out-expo) both;
+}
+.stagger > *:nth-child(2) { animation-delay: 50ms; }
+.stagger > *:nth-child(3) { animation-delay: 100ms; }
+.stagger > *:nth-child(4) { animation-delay: 150ms; }
+.stagger > *:nth-child(5) { animation-delay: 200ms; }
+.stagger > *:nth-child(n + 6) { animation-delay: 250ms; }
+
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(57 178 74 / 0.55); }
+  50% { box-shadow: 0 0 0 5px rgb(57 178 74 / 0); }
+}
+.breathe {
+  animation: breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: -200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--color-segment) 25%, var(--color-muted) 50%, var(--color-segment) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
