@@ -1,4 +1,4 @@
-// Uploaded files: Vercel Blob (private store) when BLOB_READ_WRITE_TOKEN is set, otherwise data/uploads on local disk.
+// Uploaded files: Vercel Blob when a store is connected (BLOB_READ_WRITE_TOKEN, or BLOB_STORE_ID with Vercel OIDC), otherwise data/uploads on local disk.
 // The returned key goes in files.path; "blob:" marks a Vercel Blob pathname.
 import { put, get } from "@vercel/blob";
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from "node:fs";
@@ -10,7 +10,7 @@ const access = process.env.BLOB_ACCESS === "public" ? "public" : "private";
 
 export async function storeFile(data: ArrayBuffer, contentType: string) {
   const name = `uploads/${randomBytes(16).toString("hex")}`;
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  if (process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID) {
     const b = await put(name, Buffer.from(data), { access, contentType: contentType || undefined, addRandomSuffix: false });
     return `blob:${b.pathname}`;
   }
