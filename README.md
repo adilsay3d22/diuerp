@@ -10,6 +10,7 @@ npm test           # business rules + workflow integration tests (W1–W4, W7, W
 npm run typecheck
 node smoke.ts      # with dev server running: renders every page for every role
 npm run turso:demo # load the classroom demo into Turso (needs .env.turso, see DEPLOY.md)
+node --env-file=.env.turso live-check.ts https://diuerp.vercel.app   # check the live site, every page for every role
 ```
 
 ## Classroom demo
