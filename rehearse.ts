@@ -5,7 +5,7 @@ const { core, registrar, student, teacher, accounts, admission, transport, servi
 
 const uid = async (uni: string) => (await get<{ id: number }>("SELECT id FROM users WHERE uni_id = ?", uni))!.id;
 const off = async (code: string, sec: string) => (await get<{ id: number }>("SELECT o.id FROM offerings o JOIN courses c ON c.id = o.course_id WHERE c.code = ? AND o.section = ? AND o.semester_id = 2", code, sec))!.id;
-const asadU = await uid("253-15-0001"), asad = (await registrar.studentByUser(asadU))!.id;
+const asadU = await uid("241-45-013"), asad = (await registrar.studentByUser(asadU))!.id;
 const sem = await registrar.currentSemester();
 const step = (n: string) => console.log("✓", n);
 
@@ -36,7 +36,7 @@ await teacher.enterMarks(tan, mid.id, { [asad]: { score: "22" }, [nafisa]: { sco
 await teacher.enterMarks(tan, fin.id, { [asad]: { score: "36" }, [nafisa]: { score: "30" } });
 await teacher.togglePublish(tan, mid.id);
 const g = (await teacher.gradeSheet(a221)).rows.find((r) => r.student_id === asad)!;
-step(`marks: Asad total ${g.total} = ${g.letter}`);
+step(`marks: Adil total ${g.total} = ${g.letter}`);
 await teacher.submitGradesheet(tan, a221); await comms.postMessage(tan, th, "Yes, chapters 1 to 4."); step("grade sheet submitted, reply sent");
 
 // Part 3: department head, exam controller, transport officer
@@ -64,7 +64,7 @@ assert.equal((await transport.studentPass(asad, sem.id))!.status, "active"); ste
 // Part 5: driver
 const drv = await uid("TRN-0001");
 const trip = (await transport.crewTrips(drv, today())).find((t) => t.direction === "to_campus");
-if (trip) { await transport.startTrip(drv, trip.id); await transport.markBoarded(drv, trip.id, { token: transport.passToken(pass) }, "qr"); step("driver started trip and scanned Asad's pass"); }
+if (trip) { await transport.startTrip(drv, trip.id); await transport.markBoarded(drv, trip.id, { token: transport.passToken(pass) }, "qr"); step("driver started trip and scanned Adil's pass"); }
 else console.log("! no trip today (Friday/holiday) — skip the driver part or generate trips for another day");
 
 // Part 6: admission end to end

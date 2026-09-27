@@ -71,19 +71,19 @@ for (const [key, c, sec, teacherId, times, room] of [
     await insert("INSERT INTO assessments (offering_id, type, title, max_marks, weight) VALUES (?,?,?,?,?)", sections[key], type, title, max, weight);
 }
 
-// ---------- Students: Asad is the demo student (nothing registered yet); Nafisa is a classmate already in section A
+// ---------- Students: Adil is the demo student (nothing registered yet); Sharon is a classmate already in section A
 const mkStudent = async (id: string, name: string, phone: string) => {
   const uid = await mk(id, name, [{ role: "student" }], phone);
   return await insert("INSERT INTO students (user_id, student_id, reg_id, program_id, batch, section, admitted_semester_id) VALUES (?,?,?,?, '42', 'A', ?)",
     uid, id, `REG-${id}`, prog, s261);
 };
-const asad = await mkStudent("253-15-0001", "Asad Adil", "01711000001");
-const nafisa = await mkStudent("253-15-0002", "Nafisa Tabassum", "01711000002");
+const asad = await mkStudent("241-45-013", "Adil", "01711000001");
+const nafisa = await mkStudent("241-35-114", "Sharon", "01711000002");
 // Last semester's results (so CSE133 counts as a completed prerequisite and there is a CGPA)
-for (const [sid, code, total] of [["253-15-0001", "CSE113", "86"], ["253-15-0001", "CSE133", "78"], ["253-15-0002", "CSE113", "74"], ["253-15-0002", "CSE133", "81"]])
+for (const [sid, code, total] of [["241-45-013", "CSE113", "86"], ["241-45-013", "CSE133", "78"], ["241-35-114", "CSE113", "74"], ["241-35-114", "CSE133", "81"]])
   await student.importResult(reg, { student_id: sid, course: code, semester: "261", section: "42_A", total }, "seed");
 await run("UPDATE semesters SET status = 'closed' WHERE id = ?", s261);
-// Nafisa registered and paid, so Tanvir's section has a classmate on the roster
+// Sharon registered and paid, so Tanvir's section has a classmate on the roster
 for (const k of ["CSE221_A", "CSE231_A"]) await student.register(0, nafisa, sections[k]);
 await accounts.recordPayment((await get<{ id: number }>("SELECT id FROM users WHERE uni_id = 'CSH-0001'"))!.id, { studentId: nafisa, amount: (await accounts.summary(nafisa)).due, method: "cash", channel: "counter" });
 
@@ -112,4 +112,4 @@ await run("DELETE FROM notifications");
 await run("DELETE FROM outbox");
 await run("DELETE FROM job_runs");
 await run("INSERT INTO job_runs (job, day) SELECT 'transport_expiry', ? UNION SELECT 'fee_due', ? UNION SELECT 'sla', ?", today(), today(), today());
-console.log(`Demo data ready: Asad ${asad}, Nafisa ${nafisa}, ${Object.keys(sections).length} sections. Password for every account: ${PW}`);
+console.log(`Demo data ready: Adil ${asad}, Sharon ${nafisa}, ${Object.keys(sections).length} sections. Password for every account: ${PW}`);

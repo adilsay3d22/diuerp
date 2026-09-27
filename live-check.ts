@@ -12,14 +12,14 @@ const studentRec = Number((await one("SELECT id FROM students ORDER BY id LIMIT 
 const cycle = Number((await one("SELECT id FROM admission_cycles ORDER BY id LIMIT 1"))?.id ?? 1);
 
 const plan: [string, string, string[]][] = [
-  ["student", "253-15-0001", ["/app", "/app/register", "/app/routine", "/app/courses", "/app/attendance", "/app/exams", "/app/clearance", "/app/results", "/app/services",
+  ["student", "241-45-013", ["/app", "/app/register", "/app/routine", "/app/courses", "/app/attendance", "/app/exams", "/app/clearance", "/app/results", "/app/services",
     "/app/fees", "/app/fees?tab=ledger", "/app/transport", "/app/mentor", "/app/calendar", "/notices", "/messages", "/helpdesk", "/notifications", "/profile", "/search?q=CSE"]],
   ["teacher", "710001301", ["/app", "/app/sections", `/app/sections/${section}`, `/app/sections/${section}?tab=assessments`, `/app/sections/${section}?tab=grades`,
     `/app/sections/${section}?tab=insights`, `/app/sections/${section}?tab=roster`, "/app/routine", "/app/mentees", "/app/evaluations"]],
   ["dept_head", "710001234", ["/admin/department", "/admin/students", `/admin/students/${studentRec}`]],
   ["registrar", "REG-0001", ["/admin/registrar", "/admin/registrar/catalogue", "/admin/registrar/rooms", "/admin/registrar/semesters", "/admin/registrar/enroll", "/admin/registrar/import", "/admin/students"]],
   ["exam_controller", "EXC-0001", ["/admin/exam", "/admin/exam/changes", "/admin/exam/schedule", "/admin/exam/requests", "/admin/exam/evaluations", "/admin/exam/mentors", "/admin/exam/reports"]],
-  ["cashier", "CSH-0001", ["/admin/cashier", "/admin/cashier?q=253-15-0001", "/admin/cashier/shift"]],
+  ["cashier", "CSH-0001", ["/admin/cashier", "/admin/cashier?q=241-45-013", "/admin/cashier/shift"]],
   ["accounts_officer", "ACC-0001", ["/admin/accounts", "/admin/accounts/approvals", "/admin/accounts/invoicing", "/admin/accounts/waivers", "/admin/accounts/reconcile", "/admin/accounts/fees"]],
   ["finance_head", "FIN-0001", ["/admin/accounts", "/admin/accounts/fees"]],
   ["admissions_officer", "ADS-0001", ["/admin/admissions", `/admin/admissions/${cycle}`]],
@@ -49,7 +49,7 @@ for (const [role, uni, urls] of plan) {
 }
 // Role guard on the live site: a student is sent away from office pages
 {
-  const u = await one("SELECT id FROM users WHERE uni_id = '253-15-0001'");
+  const u = await one("SELECT id FROM users WHERE uni_id = '241-45-013'");
   const token = randomBytes(16).toString("hex");
   tokens.push(token);
   await db.execute({ sql: "INSERT INTO sessions (token, user_id, role, expires_at) VALUES (?,?,'student', datetime('now','+15 minutes'))", args: [token, Number(u!.id)] });
